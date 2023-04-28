@@ -15,11 +15,11 @@ const Deck2 = () => {
     const timerId = useRef();
 
     useEffect(() => {
-         async function fetchData(){
+         async function fetchDeckId(){
             const res=await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
             setDeckId(res.data.deck_id)
          }
-         fetchData();
+         fetchDeckId();
     }, [])
 
     async function getCard(deckId){
@@ -29,7 +29,7 @@ const Deck2 = () => {
             alert("there is no more cards!")
             clearInterval(timerId.current)
         }
-        console.log(res.data.cards[0].image, deckId)
+        // console.log(res.data.cards[0].image, deckId)
         setCardImgs(cardImgs=>[...cardImgs, res.data.cards[0].image])
         
     }
@@ -40,9 +40,9 @@ const Deck2 = () => {
             setIsDrawing(isDrawing => !isDrawing);
             // start calling getCard function every seconds =>useEffect => clean up function to stop the Interval.
             
-            timerId.current = setInterval(()=>{
-                console.log(timerId)
-                getCard(deckId);  
+            timerId.current = setInterval(async ()=>{
+                // console.log(timerId)
+                await getCard(deckId);  
             }, 1000)
             
 
@@ -66,3 +66,86 @@ const Deck2 = () => {
 }
 
 export default Deck2;
+
+// springboard
+// uses useState to start setInterval when autoDraw turns True by setting the second paramenter for useState to [autoDraw]
+/* Deck: uses deck API, allows drawing card at a time. */
+
+// function Deck() {
+//     const [deck, setDeck] = useState(null);
+//     const [drawn, setDrawn] = useState([]);
+//     const [autoDraw, setAutoDraw] = useState(false);
+//     const timerRef = useRef(null);
+  
+//     /* At mount: load deck from API into state. */
+//     useEffect(() => {
+//       async function getData() {
+//         let d = await axios.get(`${API_BASE_URL}/new/shuffle/`);
+//         setDeck(d.data);
+//       }
+//       getData();
+//     }, [setDeck]);
+  
+//     /* Draw one card every second if autoDraw is true */
+//     useEffect(() => {
+//       /* Draw a card via API, add card to state "drawn" list */
+//       async function getCard() {
+//         let { deck_id } = deck;
+  
+//         try {
+//           let drawRes = await axios.get(`${API_BASE_URL}/${deck_id}/draw/`);
+  
+//           if (drawRes.data.remaining === 0) {
+//             setAutoDraw(false);
+//             throw new Error("no cards remaining!");
+//           }
+  
+//           const card = drawRes.data.cards[0];
+  
+//           setDrawn(d => [
+//             ...d,
+//             {
+//               id: card.code,
+//               name: card.suit + " " + card.value,
+//               image: card.image
+//             }
+//           ]);
+//         } catch (err) {
+//           alert(err);
+//         }
+//       }
+  
+//       if (autoDraw && !timerRef.current) {
+//         timerRef.current = setInterval(async () => {
+//           await getCard();
+//         }, 1000);
+//       }
+  
+//       return () => {
+//         clearInterval(timerRef.current);
+//         timerRef.current = null;
+//       };
+//     }, [autoDraw, setAutoDraw, deck]);
+  
+//     const toggleAutoDraw = () => {
+//       setAutoDraw(auto => !auto);
+//     };
+  
+//     const cards = drawn.map(c => (
+//       <Card key={c.id} name={c.name} image={c.image} />
+//     ));
+  
+//     return (
+//       <div className="Deck">
+//         {deck ? (
+//           <button className="Deck-gimme" onClick={toggleAutoDraw}>
+//             {autoDraw ? "STOP" : "KEEP"} DRAWING FOR ME!
+//           </button>
+//         ) : null}
+//         <div className="Deck-cardarea">{cards}</div>
+//       </div>
+//     );
+//   }
+  
+//   export default Deck;
+  
