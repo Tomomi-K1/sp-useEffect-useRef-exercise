@@ -1,19 +1,14 @@
-// import './App.css';
+import './App.css';
 import React from 'react';
-// import Clicker from './Clicker';
-// import ButtonGroup from './ButtonGroup';
-// import Counter from './Counter';
-import NumberGame from './NumberGame';
+// import Deck1 from './Deck1';
+import Deck2 from './Deck2';
+
 
 function App() {
   return (
     <div className='App'>
-      <NumberGame />
-      {/* <ButtonGrousp /> */}
-      {/* <Counter /> */}
-      {/* <Clicker />
-      <Clicker />
-      <Clicker /> */}
+      {/* <Deck1 /> */}
+      <Deck2 />
     </div>
   );
 }
